@@ -1,0 +1,41 @@
+{% extends "groups/group_base.html" %}
+
+{% block pregroup %}
+<div style="margin-top:20px;" class="jumbotron">
+<h1>{{group.name}}</h1>
+<!-- This group.name came from the models on calling views,
+models.py has class Group, so it automatically returns lower
+case of the model name as 'group' as this is in detail views
+In list view it would have returned 'group_list' -->
+<h2>Member Count: {{group.members.count}}</h2>
+</div>
+<div class="content">
+  <div style="margin-top:202px; margin-left:10px;">
+
+  {% if user in group.members.all %}
+    <a class="btn btn-lg btn-fill btn-warning"
+       href="{% url 'groups:leave' slug=group.slug %}"><span
+       class="glyphicon glyphicon-remove"></span>Leave</a>
+  {% else %}
+    <a class="btn btn-lg btn-fill btn-success"
+       href="{% url 'groups:join' slug=group.slug %}"><span
+       class="glyphicon glyphicon-ok"></span>Join</a>
+
+  {% endif %}
+  </div>
+</div>
+{% endblock %}
+
+{% block group_content %}
+<div class="col-md-8">
+  {% if group.posts.count == 0 %}
+  <br><br>
+    <h2>No posts in this group yet!</h2>
+  {% else %}
+    {% for post in group.posts.all %}
+      {% include "posts/_post.html" %}
+    {% endfor %}
+  {% endif %}
+</div>
+
+{% endblock %}
